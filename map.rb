@@ -1,25 +1,19 @@
-# frozen_string_literal: true
+friends = %w[Sharon Leo Leila Brian Arun]
 
-friends = ['Sharon', 'Leo', 'Leila', 'Brian', 'Arun']
-
-puts friends.select { |friend| friend.upcase }
+puts(friends.select(&:upcase))
 puts
-puts friends.map { |friend| friend.upcase }
+puts(friends.map(&:upcase))
 #=> `['SHARON', 'LEO', 'LEILA', 'BRIAN', 'ARUN']`
 
+friends = %w[Sharon Leo Leila Brian Arun]
 
-friends = ['Sharon', 'Leo', 'Leila', 'Brian', 'Arun']
-
-friends.map { |friend| friend.upcase }
+friends.map(&:upcase)
 #=> `['SHARON', 'LEO', 'LEILA', 'BRIAN', 'ARUN']`
-
-friends
 #=> ['Sharon', 'Leo', 'Leila', 'Brian', 'Arun']
 
+friends = %w[Sharon Leo Leila Brian Arun]
 
-friends = ['Sharon', 'Leo', 'Leila', 'Brian', 'Arun']
-
-friends.map! { |friend| friend.upcase }
+friends.map!(&:upcase)
 #=> `['SHARON', 'LEO', 'LEILA', 'BRIAN', 'ARUN']`
 
 friends

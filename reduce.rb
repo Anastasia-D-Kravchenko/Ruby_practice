@@ -1,11 +1,9 @@
-# frozen_string_literal: true
-
 my_numbers = [5, 6, 7, 8]
 
-puts my_numbers.reduce { |sum, number| sum + number }
+puts(my_numbers.sum)
 #=> 26
 
 my_numbers = [5, 6, 7, 8]
 
-puts my_numbers.reduce(1000) { |sum, number| sum + number }
+puts my_numbers.sum(1000)
 #=> 1026

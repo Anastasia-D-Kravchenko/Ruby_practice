@@ -1,13 +1,9 @@
-# frozen_string_literal: true
-
 def substrings(string, dictionary)
   result = Hash.new(0)
   lowered_text = string.downcase
   dictionary.each do |word|
     matches = lowered_text.scan(word).length
-    if matches > 0
-      result[word] = matches
-    end
+    result[word] = matches if matches.positive?
   end
   result
 end

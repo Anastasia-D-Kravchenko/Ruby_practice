@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 l = 0
 
 loop do
@@ -13,21 +11,20 @@ end
 # end
 
 i = 0
-until i == 10 do
+until i == 10
   puts "i = #{i}"
   i += 1
 end
 
 puts(1..5)
 
-for i in 1..5 do
+(1..5).each do |i|
   puts "i = #{i}"
 end
 
 5.times do
   puts "hi, sunny"
 end
-
 
 5.times do |number|
   puts "Alternative fact number #{number}"

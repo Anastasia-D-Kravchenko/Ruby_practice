@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 numbers = [21, 42, 303, 499, 550, 811]
 
 numbers.any? { |number| number > 500 }
@@ -7,7 +5,6 @@ numbers.any? { |number| number > 500 }
 
 numbers.any? { |number| number < 20 }
 #=> false
-
 
 fruits = %w[apple banana strawberry pineapple]
 
@@ -17,7 +14,6 @@ fruits.all? { |fruit| fruit.length > 3 }
 fruits.all? { |fruit| fruit.length > 6 }
 #=> false
 
-
 fruits = %w[apple banana strawberry pineapple]
 
 fruits.none? { |fruit| fruit.length > 10 }
@@ -25,7 +21,6 @@ fruits.none? { |fruit| fruit.length > 10 }
 
 fruits.none? { |fruit| fruit.length > 6 }
 #=> false
-
 
 fruits = %w[apple banana strawberry pineapple]
 

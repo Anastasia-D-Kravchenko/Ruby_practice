@@ -1,8 +1,6 @@
-# frozen_string_literal: true
+require "colorize"
 
-require 'colorize'
-
-puts 'Red goes faster!'.colorize(:red)
+puts "Red goes faster!".colorize(:red)
 
 puts "I'm blue da ba dee da ba di!".colorize(:blue)
 

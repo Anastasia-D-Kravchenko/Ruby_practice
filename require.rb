@@ -29,9 +29,9 @@ class Hotel
 end
 
 # main.rb
-require_relative 'lib/airport'
-require_relative 'lib/flight'
-require_relative 'lib/hotel'
+require_relative "lib/airport"
+require_relative "lib/flight"
+require_relative "lib/hotel"
 
 Airport.new.introduce
 #=> I'm at the airport!
@@ -42,7 +42,3 @@ Flight.new.introduce
 Hotel.new.introduce
 #=> I'm at the hotel!
 # frozen_string_literal: true
-
-
-
-

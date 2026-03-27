@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 def isogram?(string)
   original_length = string.length
   string_array = string.downcase.split
@@ -11,8 +9,7 @@ isogram?("Odin")
 
 #=> false
 
-
-require 'pry-byebug'
+require "pry-byebug"
 
 def isogram?(string)
   original_length = string.length
@@ -26,19 +23,14 @@ end
 
 isogram?("Odin")
 
-
-require 'pry-byebug' # 1. Tell Ruby to load the gem we just installed
-
 def calculate_total(price, tax)
   total = price + (price * tax)
 
   binding.pry # 2. THIS IS THE MAGIC PAUSE BUTTON
 
-  return total
+  total
 end
 
 puts "Starting calculation..."
 calculate_total(100, 0.05)
 puts "Calculation finished!"
-
-

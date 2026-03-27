@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 def bubble_sort(array)
   n = array.length
   loop do
@@ -10,7 +8,7 @@ def bubble_sort(array)
         swapped = true
       end
     end
-    break if not swapped
+    break unless swapped
   end
   array
 end

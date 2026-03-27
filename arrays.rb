@@ -1,21 +1,16 @@
-# frozen_string_literal: true
-
 num_array = [1, 2]
 
 num_array.push(3, 4)      #=> [1, 2, 3, 4]
 num_array << 5            #=> [1, 2, 3, 4, 5]
-num_array.pop             #=> 5
-num_array                 #=> [1, 2, 3, 4]
+num_array.pop             #=> 5                 #=> [1, 2, 3, 4]
 
-
-str_array = ["This", "is", "a", "small", "array"]
+str_array = %w[This is a small array]
 
 str_array.first         #=> "This"
 str_array.first(2)      #=> ["This", "is"]
 str_array.last(2)       #=> ["small", "array"]
 
-
-str_array = ["This", "is", "a", "small", "array"]
+str_array = %w[This is a small array]
 
 str_array[0]            #=> "This"
 str_array[1]            #=> "is"
@@ -26,16 +21,12 @@ str_array[-2]           #=> "small"
 num_array = [2, 3, 4]
 
 num_array.unshift(1)      #=> [1, 2, 3, 4]
-num_array.shift           #=> 1
-num_array                 #=> [2, 3, 4]
+num_array.shift           #=> 1                 #=> [2, 3, 4]
 
 num_array = [1, 2, 3, 4, 5, 6]
 
 num_array.pop(3)          #=> [4, 5, 6]
-num_array.shift(2)        #=> [1, 2]
-num_array                 #=> [3]
-
-[1, 1, 1, 2, 2, 3, 4] - [1, 4]  #=> [2, 2, 3]
+num_array.shift(2)        #=> [1, 2]                 #=> [3] #=> [2, 2, 3]
 
 [].empty?               #=> true
 [[]].empty?             #=> false
@@ -50,4 +41,3 @@ num_array                 #=> [3]
 
 [1, 2, 3].join          #=> "123"
 [1, 2, 3].join("-")     #=> "1-2-3"
-

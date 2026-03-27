@@ -12,7 +12,7 @@ class MegaGreeter
   def say_hi
     if @names.nil?
       puts "..."
-    elsif @names.respond_to?("each")
+    elsif @names.respond_to?(:each)
       # @names is a list of some kind, iterate!
       @names.each do |name|
         puts "Hello #{name}!"
@@ -26,17 +26,16 @@ class MegaGreeter
   def say_bye
     if @names.nil?
       puts "..."
-    elsif @names.respond_to?("join")
+    elsif @names.respond_to?(:join)
       # Join the list elements with commas
-      puts "Goodbye #{@names.join(", ")}.  Come back soon!"
+      puts "Goodbye #{@names.join(', ')}.  Come back soon!"
     else
       puts "Goodbye #{@names}.  Come back soon!"
     end
   end
 end
 
-
-if __FILE__ == $0
+if __FILE__ == $PROGRAM_NAME
   mg = MegaGreeter.new
   mg.say_hi
   mg.say_bye
@@ -47,8 +46,8 @@ if __FILE__ == $0
   mg.say_bye
 
   # Change the name to an array of names
-  mg.names = ["Albert", "Brenda", "Charles",
-              "Dave", "Engelbert"]
+  mg.names = %w[Albert Brenda Charles
+                Dave Engelbert]
   mg.say_hi
   mg.say_bye
 

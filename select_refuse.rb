@@ -1,32 +1,23 @@
-# frozen_string_literal: true
-
-friends = ['Sharon', 'Leo', 'Leila', 'Brian', 'Arun']
+friends = %w[Sharon Leo Leila Brian Arun]
 invited_list = []
 
-for friend in friends do
-  if friend != 'Brian'
-    invited_list.push(friend)
-  end
+friends.each do |friend|
+  invited_list.push(friend) if friend != "Brian"
 end
 
-invited_list #=> ["Sharon", "Leo", "Leila", "Arun"]
+friends = %w[Sharon Leo Leila Brian Arun]
 
-
-friends = ['Sharon', 'Leo', 'Leila', 'Brian', 'Arun']
-
-puts friends.select { |friend| friend != 'Brian' }
+puts(friends.reject { |friend| friend == "Brian" })
 #=> ["Sharon", "Leo", "Leila", "Arun"]
-
 
 friends = %w[Sharon Leo Leila Brian Arun]
 
-friends.reject { |friend| friend == 'Brian' }
+friends.reject { |friend| friend == "Brian" }
 #=> ["Sharon", "Leo", "Leila", "Arun"]
-
 
 friends = %w[Sharon Leo Leila Brian Arun]
 
-friends.each { |friend| puts "Hello, " + friend }
+friends.each { |friend| puts "Hello, #{friend}" }
 
 #=> Hello, Sharon
 #=> Hello, Leo
@@ -35,7 +26,6 @@ friends.each { |friend| puts "Hello, " + friend }
 #=> Hello, Arun
 
 #=> ["Sharon", "Leo", "Leila", "Brian" "Arun"]
-
 
 my_array = [1, 2]
 
