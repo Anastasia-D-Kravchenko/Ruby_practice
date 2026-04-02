@@ -1,6 +1,6 @@
 # 💎 The Odin Project: Ruby Course
 
-> **Current Status:** 🏗️ Work in Progress (25% Complete)
+> **Current Status:** (Completed)
 
 ## 📖 Overview
 This repository tracks my progress through [The Odin Project's Ruby Course](https://www.theodinproject.com/). It is a deep dive into Ruby, the language "designed for programmer happiness." The curriculum heavily focuses on object-oriented design, test-driven development (TDD), and core computer science data structures.
