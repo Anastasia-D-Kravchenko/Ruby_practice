@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Perceptron Language Classifier</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+      /* Restored Palette */
+      body { font-family: sans-serif; margin: 20px; background: #D9E9E9; color: #102020; }
+      .container { max-width: 1100px; margin: auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(16, 32, 32, 0.15); }
+      h1, h2, h3 { color: #2D4C4F; border-bottom: 2px solid #78B4B7; padding-bottom: 5px; margin-top: 0; }
+
+      textarea, select, input[type="range"] {
+          width: 100%; padding: 12px; margin-top: 5px; margin-bottom: 15px;
+          box-sizing: border-box; border: 2px solid #78B4B7; border-radius: 4px; background: #f9f9f9;
+      }
+
+      button { background: #2D4C4F; color: #D9E9E9; padding: 14px 15px; border: none; border-radius: 4px; cursor: pointer; width: 100%; font-size: 16px; font-weight: bold; transition: background 0.3s;}
+      button:hover { background: #102020; }
+
+      .settings-group { padding: 20px; border: 1px solid #78B4B7; border-radius: 4px; margin-bottom: 20px; background: #f4f8f8; }
+      .prediction-banner { padding: 15px; background: #D9E9E9; border-left: 5px solid #2D4C4F; margin-bottom: 20px; font-size: 20px; color: #83241E; font-weight: bold; }
+
+      /* Similarity Bars */
+      .score-row { display: flex; align-items: center; margin-bottom: 8px; }
+      .score-track { flex: 1; background: #D9E9E9; border-radius: 4px; height: 20px; overflow: hidden; margin: 0 10px; }
+      .score-fill { background: #2D4C4F; height: 100%; transition: width 0.6s; }
+
+      /* Chart Controls */
+      .chart-controls { display: flex; gap: 10px; align-items: center; }
+      .lang-btn { background: #78B4B7; color: #102020; padding: 6px 12px; border-radius: 4px; font-size: 14px; width: auto; font-weight: normal; transition: 0.2s;}
+      .lang-btn:hover { background: #2D4C4F; color: white; }
+      .active-lang { background: #83241E !important; color: white !important; font-weight: bold; }
+
+      /* Clickable Table */
+      table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+      th { background-color: #2D4C4F; color: white; padding: 12px; position: sticky; top: 0; }
+      td { border: 1px solid #78B4B7; padding: 10px; font-size: 13px; }
+      .correct { background-color: #D9E9E9; }
+      .incorrect { background-color: #83241E; color: white; }
+      .scroll-box { max-height: 400px; overflow-y: auto; border: 2px solid #78B4B7; border-radius: 4px; }
+      .clickable-row:hover { filter: brightness(0.95); cursor: pointer; border: 2px solid #2D4C4F;}
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>NAI Perceptron Language Classifier</h1>
+
+  <div class="settings-group">
+    <h3>1. Weighted Sentence Generator</h3>
+    <div style="display: flex; gap: 15px; align-items: center;">
+      <div style="flex: 1;">
+        <label>Language:</label>
+        <select id="genLang"><% dictionaries.keys.each do |l| %><option value="<%= l %>"><%= l %></option><% end %></select>
+      </div>
+      <div style="flex: 1;">
+        <label>Temperature: <span id="tempVal">1.0</span></label>
+        <input type="range" id="genTemp" min="0.1" max="3.0" step="0.1" value="1.0" oninput="document.getElementById('tempVal').innerText = this.value">
+      </div>
+      <button type="button" onclick="generateWeightedSentence()" style="width: auto;">Generate Text</button>
+    </div>
+  </div>
+
+  <form id="classifyForm" action="/classify" method="post">
+    <div class="settings-group">
+      <h3>2. Text Analysis</h3>
+      <textarea id="text_input" name="text_input" rows="5" required><%= text %></textarea>
+      <button type="submit">Identify Language & Show Statistics</button>
+    </div>
+  </form>
+
+  <% if result %>
+    <div class="prediction-banner" id="results">Identified Language: <%= result %></div>
+
+    <div class="settings-group">
+      <h3>Confidence Score (Softmax)</h3>
+      <% scores.sort_by { |_, v| -v }.each do |lang, percent| %>
+        <div class="score-row">
+          <div style="width: 80px;"><%= lang %></div>
+          <div class="score-track"><div class="score-fill" style="width: <%= percent %>%; background: <%= lang == result ? '#83241E' : '#2D4C4F' %>;"></div></div>
+          <div style="width: 50px;"><%= percent %>%</div>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="settings-group">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
+        <h3 style="border: none; padding: 0;">Frequency Profile Comparison</h3>
+
+        <div class="chart-controls">
+          <span style="font-size: 14px; font-weight: bold; color: #2D4C4F;">Compare with:</span>
+          <% network.perceptrons.map(&:language).each do |lang| %>
+            <button type="button"
+                    class="lang-btn <%= lang == result ? 'active-lang' : '' %>"
+                    onclick="updateChart('<%= lang %>')">
+              <%= lang %>
+            </button>
+          <% end %>
+        </div>
+      </div>
+      <canvas id="comparisonChart" height="100"></canvas>
+    </div>
+  <% end %>
+
+  <% if accuracy %>
+    <h2 style="margin-top: 40px;">Overall Accuracy: <%= accuracy %>%</h2>
+    <div class="scroll-box">
+      <table>
+        <thead><tr><th>Actual</th><th>Predicted</th><th>Snippet</th><th>Status</th></tr></thead>
+        <tbody>
+        <% test_results.each do |r| %>
+          <tr class="clickable-row <%= r[:correct] ? 'correct' : 'incorrect' %>"
+              onclick="document.getElementById('text_input').value='<%= ERB::Util.html_escape(r[:full_text]) %>'; document.getElementById('classifyForm').submit();">
+            <td><b><%= r[:actual] %></b></td><td><%= r[:predicted] %></td><td style="font-family: monospace;"><%= r[:text] %></td><td><%= r[:correct] ? "✓" : "✗" %></td>
+          </tr>
+        <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% end %>
+</div>
+
+<script>
+    const dicts = <%= JSON.generate(dictionaries) %>;
+    const profiles = <%= JSON.generate(network.profiles) %>;
+    let chartInstance = null;
+
+    function generateWeightedSentence() {
+        const lang = document.getElementById('genLang').value;
+        const temp = parseFloat(document.getElementById('genTemp').value);
+        const words = dicts[lang];
+
+        let weights = words.map(w => Math.pow(w.freq, 1 / temp));
+        let sum = weights.reduce((a, b) => a + b, 0);
+
+        let result = [];
+        let sentenceLength = Math.floor(Math.random() * 20) + 20;
+
+        for(let j=0; j<sentenceLength; j++) {
+            let target = Math.random() * sum;
+            let running = 0;
+            for(let i=0; i<words.length; i++) {
+                running += weights[i];
+                if(target <= running) { result.push(words[i].word); break; }
+            }
+        }
+        let s = result.join(" ");
+        document.getElementById('text_input').value = s.charAt(0).toUpperCase() + s.slice(1) + ".";
+    }
+
+    <% if result && defined?(vector_map) %>
+    const ctx = document.getElementById('comparisonChart').getContext('2d');
+    const inputData = <%= JSON.generate(vector_map.values) %>;
+
+    chartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: <%= JSON.generate(('a'..'z').to_a) %>,
+            datasets: [
+                { label: 'Your Input Text', data: inputData, backgroundColor: '#83241E' },
+                { label: 'Expected Profile (<%= result %>)', data: profiles['<%= result %>'], backgroundColor: '#78B4B7' }
+            ]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { labels: { color: '#102020', font: {family: 'sans-serif'} } } },
+            scales: {
+                x: { ticks: { color: '#102020' } },
+                y: { ticks: { color: '#102020' } }
+            }
+        }
+    });
+
+    window.updateChart = function(lang) {
+        chartInstance.data.datasets[1].data = profiles[lang];
+        chartInstance.data.datasets[1].label = 'Expected Profile (' + lang + ')';
+        chartInstance.update();
+
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            if (btn.innerText.trim() === lang) {
+                btn.classList.add('active-lang');
+            } else {
+                btn.classList.remove('active-lang');
+            }
+        });
+    };
+
+    document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+    <% end %>
+</script>
+</body>
+</html>
